@@ -64,6 +64,7 @@
     nautilus
 
     rke2_1_31
+    cilium-cli
   ];
 
   # Add symlinks for RKE2 binaries
@@ -113,12 +114,17 @@
       settings.cni = "cilium";
       settings.disable-kube-proxy = true;
 
-      manifests = {
-        "rke2-cilium-config.yaml" = ./manifests/rke2-cilium-config.yaml;
-      };
+      #manifests = {
+      #  "rke2-cilium-config.yaml" = ./manifests/rke2-cilium-config.yaml;
+      #};
     };
 
   };
+
+  # Add this section to properly handle the manifest file
+  systemd.tmpfiles.rules = [
+    "f /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml - - - - ${./manifests/rke2-cilium-config.yaml}"
+  ];
 
   # This value determines the NixOS release with which your system is to be compatible
   system.stateVersion = "25.11";
